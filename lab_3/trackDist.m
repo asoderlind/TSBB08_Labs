@@ -2,8 +2,8 @@ function TrackIm = trackDist(Im, DistIm, starty, startx);
 % This function performs tracking in the distance map DistIm
 % towards lower values.
 % Im is the original image with obstacles.
-% starty is the starting position in y (row). 
-% startx is the starting position in x (column). 
+% starty is the starting position in y (row).
+% startx is the starting position in x (column).
 % The function returns an image with the tracking result.
 
 y = starty;
