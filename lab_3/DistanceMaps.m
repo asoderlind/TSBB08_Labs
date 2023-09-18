@@ -15,3 +15,10 @@ subplot(1,4,3), imagesc(Im_chess, [0 50]);
 axis image; title('chessboard'); colorbar
 subplot(1,4,4), imagesc(Im_cityblock, [0 50]);
 axis image; title('cityblock'); colorbar
+
+ImD = imread("distObject.tif");
+figure(2)
+colormap(colorcube(51))
+subplot(2,2,1), imagesc(ImD);
+axis image; title("distObject"); colorbar
+subplot(2,2,2), imagesc(bwdist(~ImD));
