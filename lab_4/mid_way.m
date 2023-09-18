@@ -1,7 +1,7 @@
 function outT = mid_way(histo, startT)
-% Calculates a threshold value from a histogram using the mid-way method. 
+% Calculates a threshold value from a histogram using the mid-way method.
 %
-% histo: A 1D array histogram. 
+% histo: A 1D array histogram.
 % The histogram bins must correspond to gray value 0, 1, 2,...
 % startT: start threshold
 % outT: the calculated threshold (integer)
@@ -10,14 +10,15 @@ function outT = mid_way(histo, startT)
 
 num = length(histo);
 t0 = floor(startT);
-t1 = t0+2;
+t1 = t0;
+t0 = t1+2; % cannot be the same when entering the loop
 
 % Calculate the threshold
 %------------------------
 while abs(t0-t1) > 0.5
-
+  
   t0 = t1;
-    
+  
   % Calculate mean for the lower part of the histogram
   %---------------------------------------------------
   lowersum1 = sum(histo(1:t0+1).*[0:t0]);
@@ -27,7 +28,7 @@ while abs(t0-t1) > 0.5
   else
     error('Cannot calculate new threshold');
   end;
-    
+  
   % Calculate mean for the upper part of the histogram
   %---------------------------------------------------
   uppersum1 = sum(histo(t0+2:num).*[t0+1:num-1]);
@@ -37,11 +38,11 @@ while abs(t0-t1) > 0.5
   else
     error('Cannot calculate new threshold');
   end;
-
+  
   % Calculate new threshold
   %------------------------
   t1 = floor((mean0+mean1)/2);
-
+  
 end;
 
 outT = t1;

@@ -61,4 +61,4 @@ axis image; title('Stroke image'); colorbar
 x = 57;
 y = 23;
 [yout, xout] = track10(nuf4bpruned, y, x); % output is 31, 49
-angle = atan2(yout-y, xout-x); % output is 2.4150
+angle = atan2(-(y-yout), (x-xout)) % output is 2.4150
