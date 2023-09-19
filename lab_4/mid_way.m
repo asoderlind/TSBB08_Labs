@@ -37,7 +37,7 @@ while abs(t0-t1) > 0.5
     mean1 = uppersum1/uppersum2;
   else
     error('Cannot calculate new threshold');
-  end;
+  end
   
   % Calculate new threshold
   %------------------------
