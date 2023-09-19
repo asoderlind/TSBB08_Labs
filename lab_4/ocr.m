@@ -2,11 +2,10 @@ function ocrOut = ocr(im_path, sigma, n_prune)
 % Read the image and cast it to double
 % ====================================
 nuf = double(imread(im_path));
-figure;
-colormap gray(256)
-imagesc(nuf, [0 255]);
-axis image; colorbar
-title("enhanced image " + im_path);
+A = 1.5;
+B = 20;
+nuf = A*nuf - B; % Ask about the order on on the lab
+
 % Extend the image
 % ================
 tmp = [nuf(:,64:-1:1) nuf nuf(:,128:-1:65)];
@@ -52,12 +51,12 @@ nufClosed = nufOpen;
 nufClosed = imdilate(nufClosed, SE4);
 nufClosed = imdilate(nufClosed, SE8);
 nufClosed = imdilate(nufClosed, SE4);
-nufClosed = imdilate(nufClosed, SE8);
+%nufClosed = imdilate(nufClosed, SE8);
 
 nufClosed = imerode(nufClosed, SE4);
 nufClosed = imerode(nufClosed, SE8);
 nufClosed = imerode(nufClosed, SE4);
-nufClosed = imerode(nufClosed, SE8);
+%nufClosed = imerode(nufClosed, SE8);
 
 % Get skeleton
 % ============
