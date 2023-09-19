@@ -1,4 +1,4 @@
-function out = demoC(inputIm,showFigs)
+function out = demoC(inputIm,pruning_n,sigma,showFigs)
 % Read the image and cast it to double
 % ====================================
 nuf = double(imread(inputIm));
@@ -10,7 +10,6 @@ nufextend = [tmp(64:-1:1,:); tmp; tmp(128:-1:65,:)];
 
 % Make a Gaussian filter
 % ======================
-sigma=100;
 lpH=exp(-0.5*([-64:64]/sigma).^2);
 lpH=lpH/sum(lpH); % Horizontal filter
 lpV=lpH';         % Vertical filter
@@ -62,7 +61,7 @@ if showFigs
     colormap(gray(256))
 end
 
-% Open the image to remove noise
+% Open & Close the image to remove noise
 % =========================================
 SE4 = [0 1 0;
     1 1 1;
@@ -71,17 +70,24 @@ SE8 = [1 1 1;
     1 1 1;
     1 1 1];
 
+% Open oct
 imTmin = imerode(imTmin, SE4);
 imTmin = imerode(imTmin, SE8);
-
 imTmin = imdilate(imTmin, SE4);
 imTmin = imdilate(imTmin, SE8);
 
+% Close oct
+imTmin = imdilate(imTmin, SE4);
+imTmin = imdilate(imTmin, SE8);
 imTmin = imdilate(imTmin, SE4);
 imTmin = imdilate(imTmin, SE8);
 
 imTmin = imerode(imTmin, SE4);
 imTmin = imerode(imTmin, SE8);
+imTmin = imerode(imTmin, SE4);
+imTmin = imerode(imTmin, SE8);
+
+
 
 if showFigs
     subplot(2,2,1), imagesc(imTmin)
@@ -98,19 +104,18 @@ if showFigs
     title('skeleton')
 end
 
-
-imTminPruned = bwmorph(imTminSkeleton, 'shrink', Inf);
+imTminPruned = bwmorph(imTminSkeleton, 'shrink', pruning_n);
 if showFigs
     subplot(2,2,3), imagesc(imTminPruned)
     axis image; colorbar
-    title('post-')
+    title('post-prune')
 end
 
 imTminClean = bwmorph(imTminPruned, 'clean');
 if showFigs
     subplot(2,2,4), imagesc(imTminClean)
     axis image; colorbar
-    title('Pruned cleaned skeleton')
+    title('post-clean')
 end
 
 out = ocrdecide(imTminClean, 8);
