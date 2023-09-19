@@ -9,7 +9,7 @@ t0 = t1+2; % cannot be the same when entering the loop
 % Calculate the threshold
 %------------------------
 while abs(t0-t1) > 0.5
-    t0 = t1
+    t0 = t1;
     
     % Lower probability
     P0_1= sum(p(1:t0+1));
@@ -47,27 +47,27 @@ while abs(t0-t1) > 0.5
         error('Cannot calculate threshold')
     end
     
-    % Lower variance
-    variance0_1 = sum(p(1:t0+1).*((0:t0) - mu0).^2);
-    variance0_2 = sum(p(1:t0+1));
-    if variance0_2 ~= 0
-        variance0 = variance0_1/variance0_2;
+    % Lower v
+    v0_1 = sum(p(1:t0+1).*((0:t0) - mu0).^2);
+    v0_2 = sum(p(1:t0+1));
+    if v0_2 ~= 0
+        v0 = v0_1/v0_2;
     else
         error('Cannot calculate threshold')
     end
     
-    % Upper variance
-    variance1_1 = sum(p(t0+2:end).*((t0+2:num) - mu1).^2);
-    variance1_2 = sum(p(t0+2:end));
-    if variance1_2 ~= 0
-        variance1 = variance1_1/variance1_2;
+    % Upper v
+    v1_1 = sum(p(t0+2:end).*((t0+1:num-1) - mu1).^2);
+    v1_2 = sum(p(t0+2:end));
+    if v1_2 ~= 0
+        v1 = v1_1/v1_2;
     else
         error('Cannot calculate threshold')
     end
     
-    c_0 = -2 * log(P0/P1) + log(variance0/variance1) + (mu0^2)/variance0 - (mu1^2)/variance1 % T^0
-    c_1 = 2*( -(mu0/variance0) + (mu1/variance1)) % T^1
-    c_2 = (variance1 - variance0)/(variance0 * variance1) % T^2
+    c_0 = -2 * log(P0/P1) + log(v0/v1) + (mu0^2)/v0 - (mu1^2)/v1; % T^0
+    c_1 = 2*( -(mu0/v0) + (mu1/v1)); % T^1
+    c_2 = (v1 - v0)/(v0 * v1); % T^2
     
     r = roots([c_2 c_1 c_0]);
     
