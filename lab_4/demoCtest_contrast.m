@@ -45,8 +45,8 @@ subplot(3,2,3), imagesc(nuf, [0 255])
 axis image; colorbar
 title('new image')
 
-A = 2.7;
-b = 80;
+A = 1.6;
+b = 50;
 
 nuf = nuf-b;
 nuf = nuf*A;

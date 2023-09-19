@@ -3,8 +3,9 @@ function out = demoC(inputIm,A,b,pruning_n,sigma,showFigs)
 % ====================================
 nuf = double(imread(inputIm));
 
-nuf = nuf-b;
-nuf = nuf*A;
+% Increase contrast of image
+% ==========================
+nuf = nuf*A-b;
 
 % Extend the image
 % ================
@@ -30,16 +31,16 @@ if showFigs
     figure;
     colormap(gray(256))
     
-    subplot(2,2,1),
+    subplot(4,2,1),
     imagesc(nufextend, [0 255])
     axis image; colorbar
     title('extended image')
     
-    subplot(2,2,2), imagesc(nufblur, [0 255])
+    subplot(4,2,2), imagesc(nufblur, [0 255])
     axis image; colorbar
     title('blurred image image')
     
-    subplot(2,2,3), imagesc(nuf, [0 255])
+    subplot(4,2,3), imagesc(nuf, [0 255])
     axis image; colorbar
     title('new image')
 end
@@ -56,12 +57,9 @@ Tmin = min_error(histo, Tmid);
 imTmin = nuf < Tmin;
 
 if showFigs
-    subplot(2,2,4), imagesc(imTmin)
+    subplot(4,2,4), imagesc(imTmin)
     axis image; colorbar
-    title('thresholded image (Tmin)')
-    
-    figure;
-    colormap(gray(256))
+    title('thresholded image (Tmin)')    
 end
 
 % Open & Close the image to remove noise
@@ -83,18 +81,14 @@ imTmin = imdilate(imTmin, SE8);
 % Close oct
 imTmin = imdilate(imTmin, SE4);
 imTmin = imdilate(imTmin, SE8);
-
 imTmin = imdilate(imTmin, SE4);
-%imTmin = imdilate(imTmin, SE8);
 
 imTmin = imerode(imTmin, SE4);
 imTmin = imerode(imTmin, SE8);
-
 imTmin = imerode(imTmin, SE4);
-%imTmin = imerode(imTmin, SE8);
 
 if showFigs
-    subplot(2,3,1), imagesc(imTmin)
+    subplot(4,2,5), imagesc(imTmin)
     axis image; colorbar
     title('Opened and closed image')
 end
@@ -103,32 +97,14 @@ end
 % ================
 imTminSkeleton = bwmorph(imTmin, 'skeleton', Inf);
 if showFigs
-    subplot(2,3,2), imagesc(imTminSkeleton)
+    subplot(4,2,6), imagesc(imTminSkeleton)
     axis image; colorbar
     title('skeleton')
 end
 
-% Prune the skeleton
-% ==================
-imTminPruned = bwmorph(imTminSkeleton, 'shrink', pruning_n);
-if showFigs
-    subplot(2,3,3), imagesc(imTminPruned)
-    axis image; colorbar
-    title('post-prune')
-end
-
-% Cleaned
-% =======
-imTminClean = bwmorph(imTminPruned, 'clean');
-if showFigs
-    subplot(2,3,4), imagesc(imTminClean)
-    axis image; colorbar
-    title('post-clean')
-end
-
 % Separate the image
 % ==================
-CC = bwconncomp(imTminPruned);
+CC = bwconncomp(imTminSkeleton);
 ImLabel = labelmatrix(CC);
 
 % Compute region properties
@@ -138,7 +114,7 @@ stats = regionprops(ImLabel, 'Area');
 minSize = max([stats.Area]);
 
 % Initialize a binary mask to keep only the larger components
-filteredBinaryImage = zeros(size(imTminPruned));
+filteredBinaryImage = zeros(size(imTminSkeleton));
 
 % Loop through the components and keep only those above the threshold
 for i = 1:numel(stats)
@@ -147,15 +123,14 @@ for i = 1:numel(stats)
     end
 end
 
-filteredBinaryImagePruned = bwmorph(filteredBinaryImage, 'shrink', 2);
+filteredBinaryImagePruned = bwmorph(filteredBinaryImage, 'shrink', pruning_n);
 
 if showFigs
-    subplot(2,3,5); imagesc(filteredBinaryImage); 
+    subplot(4,2,7); imagesc(filteredBinaryImage); 
     axis image; colorbar; title("separated image")
-    subplot(2,3,6); imagesc(filteredBinaryImagePruned); 
+    subplot(4,2,8); imagesc(filteredBinaryImagePruned); 
     axis image; colorbar; title("separated pruned")
 end
-
 
 out = ocrdecide(filteredBinaryImagePruned, 8);
 

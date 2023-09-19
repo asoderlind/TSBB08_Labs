@@ -15,7 +15,7 @@ files = ["nuf0a.tif", ...
 
 A = 1.6;
 b = 50;
-pruning_n = 5;
+pruning_n = 7;
 sigma = 21;
 sum = 0;
 
@@ -23,7 +23,7 @@ for i = 1:length(files)
     numericPart = str2double(regexp(files(i), '\d+', 'match'));
 
     % Print the figures for 2b
-    if i == 1
+    if i == 4
         res = demoC(files(i), A, b, pruning_n, sigma, true);
     else 
         res = demoC(files(i), A, b, pruning_n, sigma, false);
