@@ -1,19 +1,19 @@
 close all; clear all; clc;
 
-im = imread('cells.tif');
-%im = imread('nuf4a.tif');
+%im = imread('cells.tif');
+im = imread('nuf0b.tif');
 
 histo = hist(im(:),[0:255]);
 
 T = mean(mean(im));
 
 Tmid = mid_way(histo, T)
-Tmin = min_error(histo, Tmid)
+%Tmin = min_error(histo, Tmid)
 
-imTmid = im > Tmid;
-imTmin = im > Tmin;
+%imTmid = im > Tmid;
+%imTmin = im > Tmin;
 
-%imTmid = im <= Tmid;
+imTmid = im <= Tmid;
 %imTmin = im <= Tmin;
 
 figure(1)

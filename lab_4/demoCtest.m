@@ -23,15 +23,11 @@ for i = 1:length(files)
     numericPart = str2double(regexp(files(i), '\d+', 'match'));
 
     % Print the figures for 2b
-    if i == 4
-        res = demoC(files(i), A, b, pruning_n, sigma, true);
-    else 
-        res = demoC(files(i), A, b, pruning_n, sigma, false);
-    end
+    res = demoC(files(i), A, b, pruning_n, sigma, true);
 
     % Check against expected val
     if  res == numericPart
-        disp(files(i) + ' O')
+        disp(files(i) + 'result: ' + res)
         sum = sum + 1;
     else
         disp(files(i) + ' X')
