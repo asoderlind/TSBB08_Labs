@@ -1,6 +1,6 @@
 im = double(imread('clic.tif'));
 pattern = im(33:33 + 19, 18:18 + 19);
-fact = 0.99;
+fact = 0.95;
 rescorr = corr(im, pattern);
 figure(1)
 colormap(gray(256))

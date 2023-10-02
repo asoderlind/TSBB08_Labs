@@ -47,3 +47,9 @@ resultim(:, :, 1) = (detectim2 == 1) .* 255 + (detectim2 == 0) .* blod;
 resultim(:, :, 2) = blod;
 resultim(:, :, 3) = blod;
 subplot(2, 3, 3), imshow(resultim / 255);
+
+figure(3);
+colormap(gray(256));
+imagesc(imT2prim, [0 1]);
+axis image; title('mer skrap'); colorbar
+
