@@ -1,0 +1,55 @@
+close all; clear all; clc;
+% Read original image;
+im = double(imread('cmanmod.png'));
+
+figure(1)
+colormap(gray(256))
+subplot(1,1,1); imagesc(im, [0 256]); colorbar;
+axis image; axis off;
+
+% Compute derivative images
+dx = [1 0 -1; 
+      2 0 -2; 
+      1 0 -1]/8; % sobelx
+fx=conv2(im,dx, 'valid'); % With valid you get rid of the dark frame
+maxx = max(max(abs(fx)))/2;
+
+dy = [1 2 1;
+       0 0 0;
+       -1 -2 -1]/8; % sobely
+fy=conv2(im,dy, 'valid'); % With valid you get rid of the dark frame
+maxy = max(max(abs(fy)))/2;
+
+% gradients
+[gradX, gradY] = gradient(im);
+
+sigma = 2;
+
+% structure tensor
+T11 = 
+T = [fx; fy]*[fx fy];
+maxT = max(max(abs(T)))/2;
+
+figure(2)
+colormap(gray(256))
+subplot(1,2,1); imagesc(fx, [-maxx maxx]); colorbar('horizontal'); 
+axis image; axis off;
+title('f_x')
+subplot(1,2,2); imagesc(fy, [-maxy maxy]); colorbar('horizontal'); 
+axis image; axis off;
+title('f_y')
+
+figure(3)
+colormap(gray(256))
+subplot(1,2,1); imagesc(gradX); colorbar('horizontal'); 
+axis image; axis off;
+title('gradX')
+subplot(1,2,2); imagesc(gradY); colorbar('horizontal'); 
+axis image; axis off;
+title('gradY')
+
+figure(4)
+colormap(gray(256))
+imagesc(T, [-maxT maxT]); colorbar('horizontal'); 
+axis image; axis off;
+title('T')
